@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Pintar Ame & Team</title>
+    <style>
+        /* CSS - Tampilan Pink Soft Aesthetic */
+        body {
+            background: linear-gradient(135deg, #fdf2f5 0%, #fce4ec 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            width: 360px;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(244, 143, 177, 0.3);
+            border: 3px solid #f8bbd0;
+        }
+
+        .user-identity {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .user-identity p {
+            color: #ad1457;
+            font-size: 10px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        .user-identity h2 {
+            color: #880e4f;
+            font-size: 15px;
+            margin: 5px 0;
+        }
+
+        /* Layar Display */
+        .display-area {
+            background: #fff8fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #fce4ec;
+            overflow: hidden;
+        }
+
+        #screen {
+            color: #c2185b;
+            font-size: 40px; /* Ukuran disesuaikan agar kalimat muat */
+            font-weight: 400;
+            margin: 0;
+            text-align: right;
+            word-wrap: break-word;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        /* Navigasi */
+        .mode-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .active { background-color: #f06292; color: white; }
+        .inactive { background-color: #fce4ec; color: #ad1457; }
+
+        /* Grid Tombol */
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 18px;
+            height: 68px;
+            width: 100%;
+            font-size: 22px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn:active { transform: scale(0.92); }
+
+        .light-gray { background-color: #fce4ec; color: #ad1457; }
+        .dark-gray { background-color: #ffffff; color: #444; border: 1px solid #f8bbd0; }
+        .orange { background-color: #f8bbd0; color: #ad1457; }
+        .scientific { background-color: #f48fb1; color: white; font-size: 15px; }
+
+        .btn-zero { grid-column: span 2; }
+
+        /* Story Panel */
+        #storyPanel {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: #fff8fa;
+            border: 2px solid #f8bbd0;
+            border-radius: 20px;
+            padding: 15px;
+            color: #880e4f;
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            resize: none;
+        }
+
+        .solve-btn {
+            background: #f06292;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(240, 98, 146, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="user-identity">
+        <p>Kalkulator Project</p>
+        <h2>Alya, Amaliyah, Aisyah</h2>
+    </div>
+
+    <div class="display-area">
+        <h1 id="screen">0</h1>
+    </div>
+
+    <div class="mode-nav">
+        <button id="btnCalc" class="mode-btn active" onclick="showPanel('calc')">Kalkulator</button>
+        <button id="btnStory" class="mode-btn inactive" onclick="showPanel('story')">Soal Cerita</button>
+    </div>
+
+    <div id="calcPanel" class="btn-grid">
+        <button class="btn scientific" onclick="append('Math.sin(')">sin</button>
+        <button class="btn scientific" onclick="append('Math.cos(')">cos</button>
+        <button class="btn scientific" onclick="append('Math.tan(')">tan</button>
+        <button class="btn orange" onclick="append('/')">÷</button>
+
+        <button class="btn light-gray" onclick="clearScreen()">AC</button>
+        <button class="btn light-gray" onclick="toggleSign()">+/-</button>
+        <button class="btn light-gray" onclick="append('%')">%</button>
+        <button class="btn orange" onclick="append('*')">×</button>
+
+        <button class="btn dark-gray" onclick="append('7')">7</button>
+        <button class="btn dark-gray" onclick="append('8')">8</button>
+        <button class="btn dark-gray" onclick="append('9')">9</button>
+        <button class="btn orange" onclick="append('-')">-</button>
+
+        <button class="btn dark-gray" onclick="append('4')">4</button>
+        <button class="btn dark-gray" onclick="append('5')">5</button>
+        <button class="btn dark-gray" onclick="append('6')">6</button>
+        <button class="btn orange" onclick="append('+')">+</button>
+
+        <button class="btn dark-gray" onclick="append('1')">1</button>
+        <button class="btn dark-gray" onclick="append('2')">2</button>
+        <button class="btn dark-gray" onclick="append('3')">3</button>
+        <button class="btn orange" onclick="calculate()">=</button>
+
+        <button class="btn dark-gray btn-zero" onclick="append('0')">0</button>
+        <button class="btn dark-gray" onclick="append('.')">,</button>
+    </div>
+
+    <div id="storyPanel">
+        <textarea id="storyInput" placeholder="Contoh: alyaaa punya 10 mobil, beli lagi 5. Jadi berapa?"></textarea>
+        <button class="solve-btn" onclick="solveStory()">Dapatkan Jawaban ✨</button>
+    </div>
+</div>
+
+<script>
+    const screen = document.getElementById('screen');
+
+    function showPanel(type) {
+        const calcP = document.getElementById('calcPanel');
+        const storyP = document.getElementById('storyPanel');
+        const btnC = document.getElementById('btnCalc');
+        const btnS = document.getElementById('btnStory');
+
+        if(type === 'calc') {
+            calcP.style.display = 'grid';
+            storyP.style.display = 'none';
+            btnC.className = 'mode-btn active';
+            btnS.className = 'mode-btn inactive';
+        } else {
+            calcP.style.display = 'none';
+            storyP.style.display = 'flex';
+            btnC.className = 'mode-btn inactive';
+            btnS.className = 'mode-btn active';
+        }
+    }
+
+    function append(val) {
+        if (screen.innerText === '0' || screen.innerText.includes("adalah")) {
+            screen.innerText = val;
+            screen.style.fontSize = "40px";
+        } else {
+            screen.innerText += val;
+        }
+    }
+
+    function clearScreen() { 
+        screen.innerText = '0'; 
+        screen.style.fontSize = "40px";
+    }
+
+    function toggleSign() { 
+        if(!isNaN(screen.innerText)) {
+            screen.innerText = parseFloat(screen.innerText) * -1; 
+        }
+    }
+
+    function calculate() {
+        try {
+            let res = eval(screen.innerText.replace('×', '*').replace('÷', '/'));
+            screen.innerText = Number.isInteger(res) ? res : res.toFixed(2);
+        } catch {
+            screen.innerText = "Error";
+            setTimeout(clearScreen, 1500);
+        }
+    }
+
+    function solveStory() {
+        const text = document.getElementById('storyInput').value.toLowerCase();
+        const nums = text.match(/\d+(\.\d+)?/g);
+        
+        if (!nums || nums.length < 2) {
+            alert("Harap masukkan minimal 2 angka!");
+            return;
+        }
+
+        const a = parseFloat(nums[0]);
+        const b = parseFloat(nums[1]);
+        let result = 0;
+        let status = "Total";
+        
+        // Deteksi Kata Benda (mengambil kata setelah angka pertama)
+        const words = text.split(/\s+/);
+        const firstNumStr = nums[0];
+        const numIndex = words.findIndex(w => w.includes(firstNumStr));
+        let benda = (numIndex !== -1 && words[numIndex + 1]) ? words[numIndex + 1].replace(/[?.!,]/g, "") : "item";
+
+        // Logika Perhitungan
+        if (text.includes("tambah") || text.includes("beli") || text.includes("dan")) {
+            result = a + b;
+            status = "Total";
+        } else if (text.includes("kurang") || text.includes("sisa") || text.includes("makan") || text.includes("hilang")) {
+            result = a - b;
+            status = "Sisa";
+        } else if (text.includes("kali")) {
+            result = a * b;
+            status = "Hasil kali";
+        } else if (text.includes("bagi")) {
+            result = a / b;
+            status = "Hasil bagi";
+        } else {
+            result = a + b;
+        }
+
+        // TAMPILAN JAWABAN SESUAI PERMINTAAN
+        screen.style.fontSize = "20px"; // Kecilkan font agar kalimat muat
+        screen.innerText = `${status} ${benda} adalah ${result} ${benda}`;
+        
+        showPanel('calc'); 
+    }
+</script>
+
+</body>
+</html>
